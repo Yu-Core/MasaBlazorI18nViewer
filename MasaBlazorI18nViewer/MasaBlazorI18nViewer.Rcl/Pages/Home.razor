@@ -1,0 +1,263 @@
+﻿@page "/"
+@using MasaBlazorI18nViewer.Rcl.Models
+
+<MCard Rounded="@("lg")">
+    <MCardTitle>
+        I18n
+        <MSpacer></MSpacer>
+        <MTextField @bind-Value="_search"
+                    AppendIcon="mdi-magnify"
+                    Label="Search"
+                    SingleLine
+                    HideDetails="true">
+        </MTextField>
+    </MCardTitle>
+    <MCardText>
+        <MDataTable @bind-Selected="_selected"
+                    Headers="_headers"
+                    Items="i18nData"
+                    ItemKey="r => r.Key"
+                    ItemsPerPage="5"
+                    Search="@_search"
+                    ShowSelect
+                    Width="@("max-content")">
+            <TopContent>
+                <div class="d-flex flex-wrap mb-2">
+                    <MSpacer></MSpacer>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+                        <MButton Rounded
+                                 Color="primary"
+                                 LeftIconName="mdi-folder-outline"
+                                 OnClick="ChooseFolderAsync">
+                            选择文件夹
+                        </MButton>
+                        <MButton Rounded
+                                 Color="success"
+                                 LeftIconName="mdi-content-save-outline"
+                                 OnClick="SaveToFileAsync">
+                            保存到文件
+                        </MButton>
+                        <MButton Rounded
+                                 Color="secondary"
+                                 Outlined
+                                 LeftIconName="mdi-translate"
+                                 OnClick="OpenBaseLanguageDialog">
+                            基础语言
+                        </MButton>
+                        <MButton Rounded
+                                 Color="info"
+                                 Outlined
+                                 LeftIconName="mdi-file-import-outline"
+                                 OnClick="() => showImportJsonDialog = true">
+                            导入翻译后的项
+                        </MButton>
+                        <MButton Rounded
+                                 Color="info"
+                                 Outlined
+                                 LeftIconName="mdi-file-export-outline"
+                                 OnClick="ExportMissingItemsToJson">
+                            导出待翻译的项
+                        </MButton>
+                        <MButton Rounded
+                                 Color="success"
+                                 Outlined
+                                 LeftIconName="mdi-plus"
+                                 OnClick="AddRow">
+                            添加行
+                        </MButton>
+                        <MButton Rounded
+                                 Color="warning"
+                                 Outlined
+                                 LeftIconName="mdi-selection-remove"
+                                 OnClick="ClearSelectedRows">
+                            清空选中行
+                        </MButton>
+                        <MButton Rounded
+                                 Outlined
+                                 Color="error"
+                                 LeftIconName="mdi-delete-outline"
+                                 OnClick="DeleteSelectedRows">
+                            删除选中行
+                        </MButton>
+                    </div>
+                </div>
+            </TopContent>
+            <ItemColContent>
+                @if (context.Header.Value == "Key")
+                {
+                    <MTextField @bind-Value="context.Item.Key"
+                                UpdateOnChange
+                                Dense
+                                HideDetails="@("auto")"
+                                Outlined
+                                Class="text-subtitle-2"
+                                Style="font-size: 14px">
+                    </MTextField>
+                }
+                else if (context.Header.Value == "actions")
+                {
+                    <MIcon Small
+                           Class="mr-2"
+                           OnClick="() => EditItem(context.Item)">
+                        mdi-pencil
+                    </MIcon>
+                    <MIcon Small
+                           OnClick="() => DeleteItem(context.Item)">
+                        mdi-delete
+                    </MIcon>
+                }
+                else
+                {
+                    if (!context.Item.Translations.ContainsKey(context.Header.Value))
+                    {
+                        context.Item.Translations[context.Header.Value] = string.Empty;
+                    }
+
+                    @* 对应 zh-CN, en-US 列，使用文本框实现双向绑定并允许编辑 *@
+                    <MTextField @bind-Value="context.Item.Translations[context.Header.Value]"
+                                UpdateOnChange
+                                Dense
+                                HideDetails="@("auto")"
+                                Outlined
+                                Style="font-size: 14px">
+                    </MTextField>
+                }
+            </ItemColContent>
+    
+        </MDataTable>
+    </MCardText>
+</MCard>
+
+<MDialog @bind-Value="showAddOrEditRowDialog"
+         MaxWidth="500"
+         ContentClass="rounded-lg">
+    <MCard>
+        <MCardTitle>
+            <span class="text-h5">@(_isEdit ? "编辑行" : "添加行")</span>
+        </MCardTitle>
+
+        <MCardText Class="pb-0">
+            <MContainer>
+                <MRow>
+                    <MCol Cols="12">
+                        <MTextField @bind-Value="_editedItem.Key"
+                                    TValue="string"
+                                    Label="Key"
+                                    UpdateOnChange
+                                    HideDetails="@("auto")"
+                                    OnChange="HandleEditedItemKeyOnChange">
+                        </MTextField>
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Cols="12">
+                        <MCascader @bind-Value="_editedItem.Path"
+                                   Items="_pathItems"
+                                   ItemText="u => u.Label"
+                                   ItemValue="u => u.Value"
+                                   ItemChildren="u => u.Children"
+                                   Readonly="@(!_editedItem.Key.Contains('.'))"
+                                   Label="Path"
+                                   HideDetails="@("auto")">
+                        </MCascader>
+                    </MCol>
+                </MRow>
+                <MRow>
+                    <MCol Cols="12">
+                        @{
+                            if (!_editedItem.Translations.ContainsKey(BaseLanguage))
+                            {
+                                _editedItem.Translations[BaseLanguage] = string.Empty;
+                            }
+
+                            <MTextField @bind-Value="_editedItem.Translations[BaseLanguage]"
+                                        TValue="string"
+                                        Label="@BaseLanguage"
+                                        UpdateOnChange
+                                        HideDetails="@("auto")">
+                            </MTextField>
+                        }
+                    </MCol>
+                </MRow>
+            </MContainer>
+        </MCardText>
+
+        <MCardActions>
+            <MSpacer></MSpacer>
+            <MButton Text
+                     OnClick="CloseAddOrEditRow">
+                取消
+            </MButton>
+            <MButton Color="primary"
+                     Text
+                     OnClick="SaveAddOrEditRow">
+                保存
+            </MButton>
+        </MCardActions>
+    </MCard>
+</MDialog>
+
+<MDialog @bind-Value="showImportJsonDialog"
+         MaxWidth="500"
+         Scrollable
+         ContentClass="rounded-lg">
+    <MCard>
+        <MCardTitle>
+            <span class="text-h5">导入json</span>
+        </MCardTitle>
+
+        <MCardText Class="pb-0">
+            <MTextarea @bind-Value="_importJsonContent"
+                       Label="JSON内容"
+                       Class="mt-2"
+                       AutoGrow
+                       Rows="10"
+                       HideDetails="@("auto")"
+                       Outlined>
+            </MTextarea>
+        </MCardText>
+
+        <MCardActions>
+            <MSpacer></MSpacer>
+            <MButton Text
+                     OnClick="CloseImportJson">
+                取消
+            </MButton>
+            <MButton Color="primary"
+                     Text
+                     OnClick="ImportJson">
+                导入
+            </MButton>
+        </MCardActions>
+    </MCard>
+</MDialog>
+
+<MDialog @bind-Value="showBaseLanguageDialog"
+         MaxWidth="500"
+         Persistent
+         ContentClass="rounded-lg">
+    <MCard>
+        <MCardTitle>
+            <span class="text-h5">基础语言</span>
+        </MCardTitle>
+        <MCardText>
+            <MSelect @bind-Value="_baseLanguage"
+                     Items="languages.ToList()"
+                     ItemText="u => u"
+                     ItemValue="u => u"
+                     Label="选择基础语言"
+                     Outlined
+                     Clearable
+                     HideDetails="@("auto")">
+            </MSelect>
+            <div class="mt-4 text-body-2 text--secondary">
+                设置基础语言后，添加行及导出待翻译项时将包含基础语言项。
+            </div>
+        </MCardText>
+        <MCardActions>
+            <MSpacer></MSpacer>
+            <MButton Text OnClick="CloseBaseLanguage">取消</MButton>
+            <MButton Color="primary" Text OnClick="SaveBaseLanguage">保存</MButton>
+        </MCardActions>
+    </MCard>
+</MDialog>

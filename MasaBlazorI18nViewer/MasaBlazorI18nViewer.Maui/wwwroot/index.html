@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>MasaBlazorI18nViewer.Maui</title>
+    <base href="/" />
+    <link rel="stylesheet" href="_content/Masa.Blazor/css/masa-blazor.min.css" />
+    <link rel="stylesheet" href="_content/MasaBlazorI18nViewer.Rcl/css/materialdesign/v7.1.96/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="_content/MasaBlazorI18nViewer.Rcl/css/app.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="MasaBlazorI18nViewer.Maui.styles.css" />
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+    <div class="status-bar-safe-area"></div>
+
+    <div id="app">Loading...</div>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+    <script src="_content/Masa.Blazor/js/masa-blazor.js"></script>
+    <script>
+        window.downloadFile = (fileName, content, mime) => {
+            try {
+                var m = mime || 'text/plain;charset=utf-8;';
+                var blob = new Blob([content], { type: m });
+                if (navigator.msSaveBlob) { // IE 10+
+                    navigator.msSaveBlob(blob, fileName);
+                } else {
+                    var link = document.createElement("a");
+                    if (link.download !== undefined) {
+                        var url = URL.createObjectURL(blob);
+                        link.setAttribute("href", url);
+                        link.setAttribute("download", fileName);
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+    </script>
+</body>
+
+</html>

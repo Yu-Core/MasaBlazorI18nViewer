@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MasaBlazorI18nViewer.WebAssembly</title>
+    <base href="/" />
+    <link rel="preload" id="webassembly" />
+    <link rel="icon" type="image/png" href="_content/MasaBlazorI18nViewer.Rcl/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <link rel="stylesheet" href="_content/Masa.Blazor/css/masa-blazor.min.css" />
+    <link rel="stylesheet" href="_content/MasaBlazorI18nViewer.Rcl/css/materialdesign/v7.1.96/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="_content/MasaBlazorI18nViewer.Rcl/css/app.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="MasaBlazorI18nViewer.WebAssembly.styles.css" />
+    <script type="importmap"></script>
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+
+    <script src="js/app-file-system-access.js"></script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+    <script src="_content/Masa.Blazor/js/masa-blazor.js"></script>
+</body>
+
+</html>

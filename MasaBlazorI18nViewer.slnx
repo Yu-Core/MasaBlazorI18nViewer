@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="D:/VS_Project/MasaBlazorI18nViewer/MasaBlazorI18nViewer/MasaBlazorI18nViewer.Gtk/MasaBlazorI18nViewer.Gtk.csproj" />
+  <Project Path="D:/VS_Project/MasaBlazorI18nViewer/MasaBlazorI18nViewer/MasaBlazorI18nViewer.Maui/MasaBlazorI18nViewer.Maui.csproj" />
+  <Project Path="D:/VS_Project/MasaBlazorI18nViewer/MasaBlazorI18nViewer/MasaBlazorI18nViewer.Rcl/MasaBlazorI18nViewer.Rcl.csproj" />
+  <Project Path="D:/VS_Project/MasaBlazorI18nViewer/MasaBlazorI18nViewer/MasaBlazorI18nViewer.WebAssembly/MasaBlazorI18nViewer.WebAssembly.csproj" />
+</Solution>
