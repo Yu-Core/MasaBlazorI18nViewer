@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MasaBlazorI18nViewer.WebAssembly</title>
+    <base href="/" />
+    <link href="_framework/dotnet.oadkofeue1.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-sGvKHp9W6J39PyUCVX38D0tDLGnWXtxsmMYdGLVcxnc=" />
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // MIT License
+        // https://github.com/rafgraph/spa-github-pages
+        // This script checks to see if a redirect is present in the query string,
+        // converts it back into the correct url and adds it to the
+        // browser's history using window.history.replaceState(...),
+        // which won't cause the browser to attempt to load the new url.
+        // When the single page app is loaded further down in this file,
+        // the correct url will be waiting in the browser's history for
+        // the single page app to route accordingly.
+        (function (l) {
+            if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function (s) {
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
+            }
+        }(window.location))
+    </script>
+    <script>
+        (function () {
+            var path = window.location.pathname.split('/');
+            var base = document.getElementsByTagName('base')[0];
+            if (window.location.host.includes('localhost')) {
+                base.setAttribute('href', '/');
+            } else if (path.length > 2) {
+                base.setAttribute('href', '/' + path[1] + '/');
+            } else if (path[path.length - 1].length != 0) {
+                window.location.replace(window.location.origin + window.location.pathname + '/' + window.location.search);
+            }
+        }());
+    </script>
+    <link rel="icon" type="image/png" href="_content/MasaBlazorI18nViewer.Rcl/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <link rel="stylesheet" href="_content/Masa.Blazor/css/masa-blazor.min.css" />
+    <link rel="stylesheet" href="_content/MasaBlazorI18nViewer.Rcl/css/materialdesign/v7.1.96/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="_content/MasaBlazorI18nViewer.Rcl/css/app.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="MasaBlazorI18nViewer.WebAssembly.styles.css" />
+    <script type="importmap">{
+  "imports": {
+    "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.66stpp682q.js",
+    "./_framework/dotnet.native.js": "./_framework/dotnet.native.o9pbzo43gi.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.oadkofeue1.js",
+    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.peu2mfb29t.js"
+  },
+  "scopes": {},
+  "integrity": {
+    "./_framework/blazor.webassembly.66stpp682q.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
+    "./_framework/blazor.webassembly.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
+    "./_framework/dotnet.js": "sha256-sGvKHp9W6J39PyUCVX38D0tDLGnWXtxsmMYdGLVcxnc=",
+    "./_framework/dotnet.native.js": "sha256-VEiIpEpT04b57X7wocwpwK72aEOc/VwCfusV14bserI=",
+    "./_framework/dotnet.native.o9pbzo43gi.js": "sha256-VEiIpEpT04b57X7wocwpwK72aEOc/VwCfusV14bserI=",
+    "./_framework/dotnet.oadkofeue1.js": "sha256-sGvKHp9W6J39PyUCVX38D0tDLGnWXtxsmMYdGLVcxnc=",
+    "./_framework/dotnet.runtime.js": "sha256-cajUr4vA/MpLPWj3omULUOwEQw3i8CE2n8AmDheqWBM=",
+    "./_framework/dotnet.runtime.peu2mfb29t.js": "sha256-cajUr4vA/MpLPWj3omULUOwEQw3i8CE2n8AmDheqWBM="
+  }
+}</script>
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+
+    <script src="js/app-file-system-access.js"></script>
+    <script src="_framework/blazor.webassembly.66stpp682q.js"></script>
+    <script src="_content/Masa.Blazor/js/masa-blazor.js"></script>
+    <script type="module">
+        import { BrotliDecode } from './js/decode.min.js';
+        Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type !== 'dotnetjs' && location.hostname !== 'localhost' && type !== 'configuration') {
+                    return (async function () {
+                        const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+                        const originalResponseBuffer = await response.arrayBuffer();
+                        const originalResponseArray = new Int8Array(originalResponseBuffer);
+                        const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                        const contentType = type ===
+                            'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+                        return new Response(decompressedResponseArray,
+                            { headers: { 'content-type': contentType } });
+                    })();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
